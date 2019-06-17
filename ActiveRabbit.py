@@ -1,51 +1,84 @@
 from __future__ import annotations
-from mysql import connector
+
+from mysql.connector.cursor import MySQLCursorDict
 from typing import Dict
 
 from Instagram import Instagram
+from UserManager import UserManager
+from User import User
 
+import datetime
+from Connection import Connection
+from TaskScheduler import TaskScheduler
+
+from logging import getLogger, StreamHandler, DEBUG
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
 
 class ActiveRabbit:
+    
 
-    conn: connector = None
     instagrams: Dict[str, Instagram] = []
 
     @classmethod
-    def processSchedulingTask(cls):
+    def processSchedulingTask(cls, user: User):
+        scheduler: TaskScheduler = TaskScheduler
+        scheduler.do(scheduler, user)
+
+    @classmethod
+    def processFollowingTask(cls, user: User):
+        # フォロータスク生成(タスクを生成したら、対象データは削除)
+        # フォロータスク実行
         pass
 
     @classmethod
-    def processFollowingTask(cls):
+    def processUnfollowingTask(cls, user: User):
+        # フォロー解除タスク生成(タスクを生成したら、対象データは削除)
+        # フォロー解除タスク実行
+        pass
+
+    @classmethod
+    def processFollowingBackTask(cls, user: User):
+        # フォロバタスク生成(フォロバは常時監視のため、対象データを削除しない)
+        # フォロバタスク実行
+        pass
+    
+    @classmethod
+    def processFavorittingTask(cls, user: User):
+        # 良いねタスク生成(良いねは常時監視のため、対象データを削除しない)
+        # 良いねタスク実行
         pass
 
     @classmethod
     def do(cls):
         # コネクションオープン
-        cls.conn = connector.connect(user='ActiveRabbit', password='%GEt25v2=PpTbiz?dfx*+!lnM.g2F1', host='localhost', database='ActiveRabbit')
+        Connection.open()
 
-        ''' スケジューリングタスク処理 '''
-        # スケジューリングタスク生成(タスクを生成したら、対象データは削除)
-        # タスクスケジューラー起動
-        # 翌日のスケジューリングタスクデータ生成
+        ''' ユーザー一覧を取得 '''
+        userManager: UserManager = UserManager()
 
-        ''' フォロータスク処理 '''
-        # フォロータスク生成(タスクを生成したら、対象データは削除)
-        # フォロータスク実行
+        for user in userManager.users():
+            ''' スケジューリングタスク処理 '''
+            cls.processSchedulingTask(user)
 
-        ''' フォロー解除タスク処理 '''
-        # フォロー解除タスク生成(タスクを生成したら、対象データは削除)
-        # フォロー解除タスク実行
+            ''' フォロータスク処理 '''
+            cls.processFollowingTask(user)
 
-        ''' フォロー解除タスク処理 '''
-        # フォロバタスク生成(フォロバは常時監視のため、対象データを削除しない)
-        # フォロバタスク実行
+            ''' フォロー解除タスク処理 '''
+            cls.processUnfollowingTask(user)
 
-        ''' 良いねタスク処理 '''
-        # 良いねタスク生成(良いねは常時監視のため、対象データを削除しない)
-        # 良いねタスク実行
+            ''' フォロバタスク処理 '''
+            cls.processFollowingBackTask(user)
+
+            ''' 良いねタスク処理 '''
+            cls.processFavorittingTask(user)
 
         # コネクションクローズ
-        cls.conn.close
+        Connection.close
 
     @classmethod
     def getInstagram(cls, name: str) -> Instagram:

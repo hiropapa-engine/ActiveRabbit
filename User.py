@@ -1,8 +1,15 @@
 from __future__ import annotations
 
-from mysql.connector import MySQLConnection
-from Instagram import Instagram
 from datetime import date
+
+
+from logging import getLogger, StreamHandler, DEBUG
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
 
 class User:
     def __init__(self, id: int, name: str, password: str, start_date: date):
@@ -10,6 +17,10 @@ class User:
         self.name: str = name
         self.password: str = password
         self.start_date: date = start_date
+
+    def create_following_tasks(self):
+        logger.debug("フォロータスク生成開始")
+        logger.debug("フォロータスク生成終了")
 
 '''
     def dump(self):
