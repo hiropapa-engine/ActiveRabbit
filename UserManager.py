@@ -24,7 +24,7 @@ class UserManager:
     def users(self) -> List[User]:   # type: List[User]
         users : List[User] = []
         cur : MySQLCursorDict = Connection.cursor()
-        cur.execute("select * from users;")
+        cur.execute("select * from users where enabled=1;")
 
         for row in cur.fetchall():
             logger.debug("次のユーザーが見つかりました: id = {id}, name = {name}".format(id=row['id'], name=row['name']))

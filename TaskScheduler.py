@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from User import User
 from Connection import Connection
-from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursorDict
 import datetime
 
@@ -20,7 +19,7 @@ class TaskScheduler:
         pass
 
     def do(self, user: User):
-        logger.debug('スケジューリングタスク : 起動 (owner_id = {owner_id})'.format(owner_id=user.id))
+        logger.debug('スケジューリングタスク : 起動 (owner_id = {owner_id})'.format(owner_id=user.user_data.id))
 
         fmt: str = '%Y-%m-%d %H:%M:%S'
         query: str = None
@@ -31,7 +30,7 @@ class TaskScheduler:
 
         # スケジューリングタスクデータ取得
         query = "select * from scheduling_tasks where owner={owner_id} and execution_timing < '{now}'".format(
-            owner_id=user.id,
+            owner_id=user.user_data.id,
             now=datetime.datetime.now().strftime(fmt)
         )
         cur.execute(query)
@@ -50,9 +49,9 @@ class TaskScheduler:
         # 処理完了したのでスケジューリングタスクデータを削除
         logger.debug('スケジューリングタスク : 処理済みデータ削除')
         query = "delete from scheduling_tasks where owner={owner_id}".format(
-            owner_id=user.id
+            owner_id=user.user_data.id
         )
-        cur.execute(query)
+        #cur.execute(query)
 
         # 翌日のスケジューリングタスクデータ生成
         next_timing = execution_timing + datetime.timedelta(days=1)
@@ -61,5 +60,5 @@ class TaskScheduler:
             owner_id = row['owner'],
             exec_timing = datetime.datetime.strftime(next_timing, fmt)
         )
-        cur.execute(query)
+        #cur.execute(query)
         logger.debug('スケジューリングタスク : 終了')

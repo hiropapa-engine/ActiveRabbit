@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 from mysql.connector.cursor import MySQLCursorDict
-from typing import Dict
 
-from Instagram import Instagram
 from UserManager import UserManager
 from User import User
 
-import datetime
 from Connection import Connection
 from TaskScheduler import TaskScheduler
+from Instagram import Instagram
+
+import datetime
 
 from logging import getLogger, StreamHandler, DEBUG
 logger = getLogger(__name__)
@@ -20,9 +20,6 @@ logger.addHandler(handler)
 logger.propagate = False
 
 class ActiveRabbit:
-    
-
-    instagrams: Dict[str, Instagram] = []
 
     @classmethod
     def processSchedulingTask(cls, user: User):
@@ -80,12 +77,8 @@ class ActiveRabbit:
         # コネクションクローズ
         Connection.close
 
-    @classmethod
-    def getInstagram(cls, name: str) -> Instagram:
-        if not name in cls.instagrams:
-            insta: Instagram = Instagram()
-            cls.instagrams[name] = insta
-        return cls.instagrams[name]
+        # トークン破棄
+        Instagram.destroy_token()
 
 if __name__ == '__main__':
     ActiveRabbit.do()

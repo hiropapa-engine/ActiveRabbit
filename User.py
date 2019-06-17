@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from datetime import date
-
+from UserData import UserData
+from FollowingSettings import FollowingSettings
 
 from logging import getLogger, StreamHandler, DEBUG
 logger = getLogger(__name__)
@@ -13,13 +14,17 @@ logger.propagate = False
 
 class User:
     def __init__(self, id: int, name: str, password: str, start_date: date):
-        self.id: int = id
-        self.name: str = name
-        self.password: str = password
-        self.start_date: date = start_date
+        self.user_data: UserData = UserData(
+            id,
+            name,
+            password,
+            start_date
+        )
 
     def create_following_tasks(self):
         logger.debug("フォロータスク生成開始")
+        following_settings: FollowingSettings = FollowingSettings(self.user_data)
+        following_settings.create_following_task_datas()
         logger.debug("フォロータスク生成終了")
 
 '''

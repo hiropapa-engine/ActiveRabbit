@@ -5,7 +5,7 @@ from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursorDict
 
 class Connection:
-    conn: connector = None
+    conn: MySQLConnection = None
 
     @classmethod
     def open(cls):
