@@ -9,6 +9,8 @@ from Connection import Connection
 from TaskScheduler import TaskScheduler
 from Instagram import Instagram
 
+from FollowingTask import FollowingTask
+
 import datetime
 
 from logging import getLogger, StreamHandler, DEBUG
@@ -28,9 +30,17 @@ class ActiveRabbit:
 
     @classmethod
     def processFollowingTask(cls, user: User):
+        n = datetime.datetime.now()
+        n_str = datetime.datetime.strftime(n, "%Y-%m-%d %H:%M:%S")
         # フォロータスク生成(タスクを生成したら、対象データは削除)
+        cur = Connection.cursor()
+        query = "select * from following_tasks where owner = {0}".format(user.user_data.id)
+        query = query + " " + "and following_timing <= '{0}' order by owner".format(n_str)
+        cur.execute(query)
         # フォロータスク実行
-        pass
+        for row in cur.fetchall():
+            task: FollowingTask = FollowingTask(user.user_data, row['following_timing'], row['target'], row['following_limit'])
+            task.do()
 
     @classmethod
     def processUnfollowingTask(cls, user: User):
