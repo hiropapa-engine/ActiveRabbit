@@ -83,4 +83,3 @@ if __name__ == '__main__':
         else:
             logger.debug("NG")
             break
-    input("Please input any key.")
