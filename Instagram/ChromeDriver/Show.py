@@ -43,4 +43,4 @@ if __name__ == "__main__":
         raise Exception
 
     Show.do(token, "hiroyuki.happy.papa")
-    input()
+    input("Please input any key.")
