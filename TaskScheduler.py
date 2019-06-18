@@ -44,14 +44,14 @@ class TaskScheduler:
             execution_timing = row['execution_timing']
 
             # ユーザーがフォロータスクを生成
-            user.create_following_tasks()
+            user.create_following_tasks(execution_timing)
             
         # 処理完了したのでスケジューリングタスクデータを削除
         logger.debug('スケジューリングタスク : 処理済みデータ削除')
         query = "delete from scheduling_tasks where owner={owner_id}".format(
             owner_id=user.user_data.id
         )
-        #cur.execute(query)
+        cur.execute(query)
 
         # 翌日のスケジューリングタスクデータ生成
         next_timing = execution_timing + datetime.timedelta(days=1)
@@ -60,5 +60,5 @@ class TaskScheduler:
             owner_id = row['owner'],
             exec_timing = datetime.datetime.strftime(next_timing, fmt)
         )
-        #cur.execute(query)
+        cur.execute(query)
         logger.debug('スケジューリングタスク : 終了')

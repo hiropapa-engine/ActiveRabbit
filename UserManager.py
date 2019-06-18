@@ -7,6 +7,7 @@ from datetime import date
 
 from User import User
 from Connection import Connection
+from UserData import UserData
 
 from logging import getLogger, StreamHandler, DEBUG
 logger = getLogger(__name__)
@@ -28,11 +29,15 @@ class UserManager:
 
         for row in cur.fetchall():
             logger.debug("次のユーザーが見つかりました: id = {id}, name = {name}".format(id=row['id'], name=row['name']))
+            start_date = row['start_date']
             user : User = User(
-                row['id'],
-                row['name'],
-                row['password'],
-                date.strftime(row['start_date'], '%Y-%m-%d')
+                UserData(
+                    row['id'],
+                    row['name'],
+                    row['password'],
+                    date(start_date.year, start_date.month, start_date.day),
+                    row['slow_start_enabled'] == 1
+                )
             )
             users.append(user)
 

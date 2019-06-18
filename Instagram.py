@@ -129,24 +129,25 @@ class Instagram:
 
         # ログインボタンクリック
         logging_in.click()
+        time.sleep(6)
 
         # ユーザー名入力
-        username_field: WebElement = browser.find_element_by_xpath(usernamePath)
         logger.debug("ログイン画面待ち")
-        browser.implicitly_wait(30)
-
+        username_field: WebElement = browser.find_element_by_xpath(usernamePath)
         username_field.send_keys(token.name)
-        time.sleep(5)
+        time.sleep(1)
 
         # パスワードを入力
         password_field: WebElement = browser.find_element_by_xpath(passwordPath)
         password_field.send_keys(token.password)
+        time.sleep(1)
 
         # Enterキー押下
         password_field.send_keys(Keys.RETURN)
-        time.sleep(5)
+        time.sleep(1)
 
         # ログイン後、自分のページに飛ぶ
+        time.sleep(5)
         instagramerURL: str = "https://www.instagram.com/{}/?hl=ja"
         encoded_name = urllib.parse.quote(token.name)
         encoded_url: str = instagramerURL.format(encoded_name)
@@ -175,18 +176,57 @@ class Instagram:
             cls.logging_in(token)
 
         instagramerURL: str = "https://www.instagram.com/{}/?hl=ja"
-        encoded_name = urllib.parse.quote(token.name)
+        encoded_name = urllib.parse.quote(name)
         encoded_url: str = instagramerURL.format(encoded_name)
         token.browser.get(encoded_url)
-
-        loggedInPath = '//*[@id="react-root"]/section/main/div/header/section/div[1]/h1'
-        logged_in: WebElement = token.browser.find_element_by_xpath(loggedInPath)
-        logger.debug("トップページ待ち")
-        token.browser.implicitly_wait(30)
-
-        instagram_name: str = logged_in.text
-
-        if not instagram_name == token.name:
-            raise Exception
+        time.sleep(3)
 
         logger.debug("表示完了")
+
+    @classmethod
+    def latest_post(cls, token: Token):
+        browser = token.browser
+        mediaSelector = '//*[@id="react-root"]/section/main/div/div[@class=" _2z6nI"]/article/div[1]/div/div[*]/div[*]/a/div[1]/div[2]'
+        mediaList = browser.find_elements_by_xpath(mediaSelector)
+        elem: WebElement = None
+        for item in mediaList:
+            if elem == None:
+                elem = item
+
+        elem.click()
+
+    @classmethod
+    def favorites_list(self, token):
+        funListXpath = '/html/body/div[3]/div[2]/div/article/div[2]/section[2]/div/div/button'
+        browser = token.browser
+        browser.find_element_by_xpath(funListXpath).click()
+
+    @classmethod
+    def following_list(cls, token: Token, follow_limit: int):
+        doFollowXpath = '/html/body/div[4]/div/div[2]/div/div/div[*]/div[3]/button'
+        aXpath = '//a'
+
+        browser = token.browser
+
+        doFollowList = browser.find_elements_by_xpath(doFollowXpath)
+        doFollowListA = browser.find_elements_by_xpath(aXpath)
+
+        following_list = []
+        while len(following_list) < follow_limit:
+
+            for idx in range (0, len(doFollowList) - 1):
+                doFollow = doFollowList[idx]
+                if doFollow.text != 'フォローする':
+                    continue
+                doFollow.click()
+
+                if len(following_list) >= follow_limit:
+                    break
+
+            if len(following_list) > follow_limit:
+                nextPageSelector = 'a.coreSpriteRightPaginationArrow'
+                browser.find_element_by_css_selector(nextPageSelector).click()
+                doFollowList = browser.find_elements_by_xpath(doFollowXpath)
+                doFollowListA = browser.find_elements_by_xpath(aXpath)
+
+        return following_list
