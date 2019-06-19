@@ -9,6 +9,7 @@ logger.addHandler(handler)
 logger.propagate = False
 
 from Token import Token
+from Token import TokenStatus
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
@@ -19,8 +20,7 @@ import time
 
 class Login:
 
-    @classmethod
-    def do(cls, token: Token, password: str):
+    def doLogin(self, token: Token, password: str):
         LOGIN_URL: str = "https://www.instagram.com/"
         LOGIN_LINK_XPATH: str = '//*[@id="react-root"]/section/main/article/div[2]/div[2]/p/a'
         USER_NAME_NAME_ATTRIBUTE: str = 'username'
@@ -32,7 +32,6 @@ class Login:
         driver: Chrome = Chrome()
         driver.implicitly_wait(10)
 
-        success: bool = False
         retryCounter = 5
         while retryCounter > 0:
             try:
@@ -57,7 +56,8 @@ class Login:
                 # 次ページ表示されればログイン完了
                 time.sleep(Token.PAGE_WAIT)
                 driver.find_element_by_xpath(LOGIN_COMPLETE_XPATH)
-                success = True
+                # トークンの状態をログイン済みに設定
+                token.status = TokenStatus.LOGGED_IN
                 break
             except Exception as e:
                 logger.debug("Login failed.")
@@ -66,18 +66,19 @@ class Login:
                 logger.debug(traceback.format_tb(e.__traceback__))
                 retryCounter = retryCounter - 1
 
-        if not success:
+        if token.status != TokenStatus.LOGGED_IN:
             raise Exception
 
         # メンバ変数にChromeドライバを保持
         token.driver = driver
 
+
 if __name__ == '__main__':
     for i in range(1, 100):
         logger.debug("Trying {}.".format(str(i)))
         token: Token = Token("h.yamamoto900@gmail.com")
-        Login.do(token, "Sorachan20100605")
-        if token.isLoggedIn():
+        Login().doLogin(token, "Sorachan20100605")
+        if token.status == TokenStatus.LOGGED_IN:
             logger.debug("OK.")
             time.sleep(2)
         else:

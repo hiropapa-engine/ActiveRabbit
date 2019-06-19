@@ -9,6 +9,14 @@ logger.addHandler(handler)
 logger.propagate = False
 
 from selenium.webdriver import Chrome
+from enum import Enum
+
+class TokenStatus(Enum):
+    NOT_LOG_IN = 1      # 未ログイン
+    LOGGED_IN = 2       # ログイン済み
+    USER = 3            # ユーザーページ表示中
+    POST = 4            # 投稿表示中
+    FAVORITE_LIST = 5   # いいねリスト表示中
 
 class Token:
     PAGE_WAIT: int = 2
@@ -16,7 +24,5 @@ class Token:
     def __init__(self, name: str):
         self.name: str = name
         self.driver: Chrome = None
-
-    def isLoggedIn(self):
-        return (self.driver != None)
+        self.status: TokenStatus = TokenStatus.NOT_LOG_IN
 

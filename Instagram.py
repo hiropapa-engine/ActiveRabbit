@@ -196,7 +196,7 @@ class Instagram:
         elem.click()
 
     @classmethod
-    def favorites_list(self, token):
+    def favorites_list(cls, token):
         funListXpath = '/html/body/div[3]/div[2]/div/article/div[2]/section[2]/div/div/button'
         browser = token.browser
         browser.find_element_by_xpath(funListXpath).click()
