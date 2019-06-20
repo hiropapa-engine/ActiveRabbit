@@ -16,7 +16,6 @@ from selenium.webdriver.common.keys import Keys
 import time
 import sys
 import traceback
-import time
 
 class Login:
 

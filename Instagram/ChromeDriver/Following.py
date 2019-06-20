@@ -8,7 +8,6 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-class FavoriteList:
-
-    def __init__(self, post):
-        self.post = post
+class Following:
+    def __init__(self, user):
+        self.user = user
