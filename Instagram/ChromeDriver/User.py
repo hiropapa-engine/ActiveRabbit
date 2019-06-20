@@ -119,5 +119,7 @@ if __name__ == "__main__":
     logger.debug("ユーザー({0})のフォロー数 : {1}".format(user.name, str(user.getFollowingNum(token))))
     post: Post = user.showRecentPost(token)
     input("Press any key to close.")
-    user = post.close(token)
+    post.close(token)
+    input("Press any key to show following.")
+    user.showFollowing(token)
     input("Press any key to exit.")
