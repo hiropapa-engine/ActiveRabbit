@@ -13,7 +13,7 @@ from Token import TokenStatus
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 from typing import List
-from FavoriteList import FavoriteList
+from Favorites import Favorites
 
 class Post:
 
@@ -103,7 +103,7 @@ class Post:
 
         return True
 
-    def favoriteList(self, token: Token) -> FavoriteList:
+    def showFavorites(self, token: Token) -> Favorites:
         FAVORITE_LIST_LINK_XPATH: str = '/html/body/div[3]/div[2]/div/article/div[2]/section[2]/div/div[2]/button/span'
         FAVORITE_LIST_DLG_XPATH: str = '/html/body/div[4]/div'
 
@@ -114,10 +114,10 @@ class Post:
         favoriteListLink: WebElement = driver.find_element_by_xpath(FAVORITE_LIST_LINK_XPATH)
         favoriteListLink.click()
 
-        favoriteListDlg: WebElement = driver.find_element_by_xpath(FAVORITE_LIST_DLG_XPATH)
-        if not favoriteListDlg.is_displayed():
+        favorites: WebElement = driver.find_element_by_xpath(FAVORITE_LIST_DLG_XPATH)
+        if not favorites.is_displayed():
             raise Exception()
 
         token.status = TokenStatus.FAVORITE_LIST
 
-        return FavoriteList(self)
+        return Favorites(self)

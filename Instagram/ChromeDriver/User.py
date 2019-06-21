@@ -11,6 +11,7 @@ logger.propagate = False
 from Token import Token
 from Token import TokenStatus
 from Post import Post
+from Favorites import Favorites
 from Following import Following
 
 from selenium.webdriver import Chrome
@@ -58,18 +59,7 @@ class User:
         mediaElem: WebElement = driver.find_element_by_xpath(MEDIA_SELECTOR_XPATH)
         mediaElem.click()
 
-        retryCount: int = 0
-        while True:
-            try:
-                mediaDialogElems: List[WebElement] = driver.find_elements_by_xpath(Post.MEDIA_DIALOG_XPATH)
-
-                if mediaDialogElems[0].is_displayed():
-                    break
-
-            except Exception as e:
-                retryCount = retryCount + 1
-                if retryCount >= Token.RETRY:
-                    raise e
+        # ToDo : 投稿が表示されたかチェック
 
         token.status = TokenStatus.POST
         return Post(self)
@@ -94,18 +84,7 @@ class User:
         followingElem: WebElement = driver.find_element_by_xpath(User.FOLLOWING_ELEMS_XPATH)
         followingElem.click()
 
-        retryCount: int = 0
-        while True:
-            try:
-                mediaDialogElems: List[WebElement] = driver.find_elements_by_xpath(Post.MEDIA_DIALOG_XPATH)
-
-                if mediaDialogElems[0].is_displayed():
-                    break
-
-            except Exception as e:
-                retryCount = retryCount + 1
-                if retryCount >= Token.RETRY:
-                    raise e
+        # ToDo : フォロー中ダイアログが表示されたかチェック
 
         return Following(self)
 
@@ -114,12 +93,17 @@ import sys
 if __name__ == "__main__":
     token: Token = Token("h.yamamoto900@gmail.com")
     Login().doLogin(token, "Sorachan20100605")
-    user: User = User("watanabenaomi703")
+    time.sleep(1)
+    user: User = User("misumisu0722")
+    time.sleep(1)
     user.show(token)
     logger.debug("ユーザー({0})のフォロー数 : {1}".format(user.name, str(user.getFollowingNum(token))))
+    time.sleep(1)
     post: Post = user.showRecentPost(token)
+    time.sleep(1)
+    favorites: Favorites = post.showFavorites(token)
+    time.sleep(1)
+    userList: List[str] = favorites.getUsers(token)
+    time.sleep(1)
+    logger.debug(userList)
     input("Press any key to close.")
-    post.close(token)
-    input("Press any key to show following.")
-    user.showFollowing(token)
-    input("Press any key to exit.")
