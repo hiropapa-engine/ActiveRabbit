@@ -17,7 +17,7 @@ class TokenStatus(Enum):
     USER = 3            # ユーザーページ表示中
     POST = 4            # 投稿表示中
     FAVORITE_LIST = 5   # いいねリスト表示中
-    FOLLOING = 6        # フォローリスト表示中
+    FOLLOWING = 6        # フォローリスト表示中
 
 class Token:
     PAGE_WAIT: int = 2

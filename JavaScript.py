@@ -8,6 +8,9 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-class Following:
-    def __init__(self, user):
-        self.user = user
+from selenium.webdriver.remote.webelement import WebElement
+import time
+class JavaScript:
+    @classmethod
+    def scrollIntoView(cls, driver, element: WebElement):
+        driver.execute_script("arguments[0].scrollIntoView();", element)

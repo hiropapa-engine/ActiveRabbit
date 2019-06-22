@@ -12,6 +12,7 @@ from Token import Token
 from Token import TokenStatus
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
+
 from typing import List
 from Favorites import Favorites
 

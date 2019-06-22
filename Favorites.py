@@ -8,19 +8,18 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-from Token import Token
-from Token import TokenStatus
-from Presentaions import Presentations
+from typing import List
+import time
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 
-from typing import List
-import time
+from Token import Token
+from Token import TokenStatus
+from Presentaions import Presentations
+from JavaScript import JavaScript
 
 class Favorites:
-
-    SCRIPT_WAIT: int = 4
 
     def __init__(self, post):
         self.post = post
@@ -57,8 +56,7 @@ class Favorites:
             if append == 0:
                 break
             else:
-                driver.execute_script("arguments[0].scrollIntoView();", favoriteList[len(favoriteList) - 1])
-                time.sleep(Favorites.SCRIPT_WAIT)
+                JavaScript.scrollIntoView(driver, favoriteList[len(favoriteList) - 1])
 
         logger.debug("favorite lists (size = {0})".format(len(userSet)))
         return list(userSet)
