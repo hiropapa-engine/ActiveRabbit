@@ -28,7 +28,7 @@ class ChromeDriver:
             options = Options()
             options.add_argument('--headless')
             options.add_argument('--no-sandbox')
-            driver = webdriver.Chrome(executable_path='/home/vpsuser/py3env/lib/python3.6/site-packages/chromedriver_binary/chromedriver', chrome_options=options)
+            driver = webdriver.Chrome(executable_path='/home/vpsuser/py3env/lib/python3.7/site-packages/chromedriver_binary/chromedriver', chrome_options=options)
         elif '--headless' in sys.argv:
             options = Options()
             options.add_argument('--headless')
