@@ -10,8 +10,6 @@ logger.propagate = False
 
 from typing import List
 
-from selenium.webdriver.remote.webelement import WebElement
-
 from Token import Token
 from Login import Login
 from Timeline import Timeline
@@ -20,13 +18,15 @@ class ArTimelineFavoriter:
 
     @classmethod
     def do(cls, name: str, password: str):
+        # ログイン
         token: Token = Token(name)
         Login().doLogin(token, password)
 
-        count = 0
-        while count < 5:
-            button = token.driver.find_element_by_class_name(Timeline.FAVOLITE_CSS)
-            button.click()
-            count = count + 1
+        # タイムラインの最新投稿を取得
+        timeline = Timeline()
+        recentPost = timeline.getRecentPost(token)
+        if recentPost != None:
+            if not timeline.isFavorited(token, recentPost):
+                timeline.favorite(token, recentPost)
 
         token.driver.close()

@@ -18,10 +18,35 @@ from JavaScript import JavaScript
 from ChromeDriver import ChromeDriver
 
 class Timeline:
+    POST_TAG_NAME = 'article'
     FAVOLITE_CSS = 'glyphsSpriteHeart__outline__24__grey_9'
 
     def __init__(self):
         pass
+
+    '''
+    最新のポストを取得
+    '''
+    def getRecentPost(self, token: Token) -> WebElement:
+        logger.debug("Timeline.getRecentPost: start.")
+        driver = token.driver
+        if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
+            logger.debug("Timeline.getRecentPost: error!! illegal token status.")
+            raise Exception()
+
+        recentPost: WebElement = None
+        driver.implicitly_wait(0)
+        try:
+            logger.debug("Timeline.getRecentPost: get article.")
+            recentPost = driver.find_element_by_tag_name("article")
+        except:
+            logger.debug("Timeline.getRecentPost: none articles.")
+            pass
+        driver.implicitly_wait(ChromeDriver.IMPLICIT_WAIT)
+        logger.debug("Timeline.getRecentPost: end.")
+
+        return recentPost
+
 
     '''
     タイムラインに"表示されている"投稿を取得する
@@ -43,7 +68,7 @@ class Timeline:
     指定された投稿が良いね済みか判定
     '''
     def isFavorited(self, token: Token, article: WebElement) -> bool:
-
+        logger.debug("Timeline.isFavorited: start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
             raise Exception()
@@ -57,7 +82,10 @@ class Timeline:
             pass
         driver.implicitly_wait(ChromeDriver.IMPLICIT_WAIT)
 
-        return favoriteIcon == None
+        res: bool = favoriteIcon == None
+
+        logger.debug("Timeline.isFavorited: end. ({0})".format(str(res)))
+        return res
 
 
     '''
@@ -69,9 +97,8 @@ class Timeline:
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
             raise Exception()
 
-        favoriteButton: WebElement = article.find_element_by_class_name(Timeline.FAVOLITE_CSS)
         JavaScript.scrollIntoView(driver, article)
-
+        favoriteButton: WebElement = article.find_element_by_class_name(Timeline.FAVOLITE_CSS)
         favoriteButton.click()
 
 import time
