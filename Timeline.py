@@ -71,6 +71,7 @@ class Timeline:
         logger.debug("Timeline.isFavorited: start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
+            logger.debug("Timeline.isFavorited: error!! illegal token status.")
             raise Exception()
 
         favoriteIcon: WebElement = None
@@ -92,14 +93,16 @@ class Timeline:
     指定された投稿に良いねする
     '''
     def favorite(self, token: Token, article: WebElement):
-
+        logger.debug("Timeline.favorite: start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
+            logger.debug("Timeline.favorite: error!! illegal token status.")
             raise Exception()
 
         JavaScript.scrollIntoView(driver, article)
         favoriteButton: WebElement = article.find_element_by_class_name(Timeline.FAVOLITE_CSS)
         favoriteButton.click()
+        logger.debug("Timeline.favorite: end.")
 
 import time
 
