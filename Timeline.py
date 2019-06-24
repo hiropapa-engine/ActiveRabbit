@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from logging import getLogger, StreamHandler, DEBUG
-logger = getLogger(__name__)
-handler = StreamHandler()
+import logging
+import sys
+from logging import getLogger, FileHandler, StreamHandler, DEBUG
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s : %(message)s')
+handler = FileHandler('/var/log/ActiveRabbit.log', 'a+') if len(sys.argv) > 1 and '--release' in sys.argv else StreamHandler()
 handler.setLevel(DEBUG)
+handler.setFormatter(formatter)
+logger = getLogger(__name__)
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
@@ -28,22 +32,22 @@ class Timeline:
     最新のポストを取得
     '''
     def getRecentPost(self, token: Token) -> WebElement:
-        logger.debug("Timeline.getRecentPost: start.")
+        logger.debug("getRecentPost() : start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
-            logger.debug("Timeline.getRecentPost: error!! illegal token status.")
+            logger.debug("getRecentPost() : error!! illegal token status.")
             raise Exception()
 
         recentPost: WebElement = None
         driver.implicitly_wait(0)
         try:
-            logger.debug("Timeline.getRecentPost: get article.")
+            logger.debug("getRecentPost() : get article.")
             recentPost = driver.find_element_by_tag_name("article")
         except:
-            logger.debug("Timeline.getRecentPost: none articles.")
+            logger.debug("getRecentPost() : none articles.")
             pass
         driver.implicitly_wait(ChromeDriver.IMPLICIT_WAIT)
-        logger.debug("Timeline.getRecentPost: end.")
+        logger.debug("getRecentPost() : end.")
 
         return recentPost
 
@@ -68,10 +72,10 @@ class Timeline:
     指定された投稿が良いね済みか判定
     '''
     def isFavorited(self, token: Token, article: WebElement) -> bool:
-        logger.debug("Timeline.isFavorited: start.")
+        logger.debug("isFavorited() : start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
-            logger.debug("Timeline.isFavorited: error!! illegal token status.")
+            logger.debug("isFavorited() : error!! illegal token status.")
             raise Exception()
 
         favoriteIcon: WebElement = None
@@ -85,7 +89,7 @@ class Timeline:
 
         res: bool = favoriteIcon == None
 
-        logger.debug("Timeline.isFavorited: end. ({0})".format(str(res)))
+        logger.debug("isFavorited() : end. ({0})".format(str(res)))
         return res
 
 
@@ -93,16 +97,16 @@ class Timeline:
     指定された投稿に良いねする
     '''
     def favorite(self, token: Token, article: WebElement):
-        logger.debug("Timeline.favorite: start.")
+        logger.debug("favorite() : start.")
         driver = token.driver
         if token.status != TokenStatus.NOT_LOG_IN and driver.current_url == 'https://www.instagram.com':
-            logger.debug("Timeline.favorite: error!! illegal token status.")
+            logger.debug("favorite() : error!! illegal token status.")
             raise Exception()
 
         JavaScript.scrollIntoView(driver, article)
         favoriteButton: WebElement = article.find_element_by_class_name(Timeline.FAVOLITE_CSS)
         favoriteButton.click()
-        logger.debug("Timeline.favorite: end.")
+        logger.debug("favorite() : end.")
 
 import time
 
