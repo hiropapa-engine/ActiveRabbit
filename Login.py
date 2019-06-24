@@ -34,8 +34,21 @@ class Login:
         LOGIN_COMPLETE_XPATH: str = '//*[@id="react-root"]'
 
         # Chromeオブジェクト(Element30秒待ち)の生成
-        driver = ChromeDriver().getDriver()
+        if token.session_id != None:
+            try:
+                logger.debug('Login.doLogin : セッション復元')
+                driver = ChromeDriver().getDriver(token.session_id)
+                logger.debug('Login.doLogin : トップページ表示')
+                driver.get(LOGIN_URL)
+                token.status = TokenStatus.LOGGED_IN
+                token.driver = driver
+                logger.debug('Login.doLogin : 正常終了(セッション再利用)')
+                return
+            except:
+                logger.debug('Login.doLogin : セッション無効')
+                pass
 
+        driver = ChromeDriver().getDriver()
         retryCounter = 5
         while retryCounter > 0:
             try:
@@ -78,6 +91,7 @@ class Login:
                 driver.find_element_by_xpath(LOGIN_COMPLETE_XPATH)
 
                 # トークンの状態をログイン済みに設定
+                token.session_id = driver.session_id
                 token.status = TokenStatus.LOGGED_IN
                 break
             except Exception as e:

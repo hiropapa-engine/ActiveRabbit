@@ -14,13 +14,17 @@ from Token import Token
 from Login import Login
 from Timeline import Timeline
 
+from ArUser import ArUser
+
 class ArTimelineFavoriter:
 
     @classmethod
-    def do(cls, name: str, password: str):
+    def do(cls, user: ArUser, password: str):
         # ログイン
-        token: Token = Token(name)
+        token: Token = Token(user.name, user.session_id)
         Login().doLogin(token, password)
+        user.session_id = token.session_id
+        user.saveSession()
 
         # タイムラインの最新投稿を取得
         timeline = Timeline()
@@ -28,5 +32,3 @@ class ArTimelineFavoriter:
         if recentPost != None:
             if not timeline.isFavorited(token, recentPost):
                 timeline.favorite(token, recentPost)
-
-        token.driver.close()

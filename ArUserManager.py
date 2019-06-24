@@ -15,7 +15,6 @@ from mysql.connector.cursor import MySQLCursorDict
 
 from Connection import Connection
 from ArUser import ArUser
-from ArUserData import ArUserData
 
 class ArUserManager:
 
@@ -31,12 +30,11 @@ class ArUserManager:
             logger.debug("次のユーザーが見つかりました: id = {id}, name = {name}".format(id=row['id'], name=row['name']))
             start_date = row['start_date']
             user : ArUser = ArUser(
-                ArUserData(
-                    row['id'],
-                    row['name'],
-                    date(start_date.year, start_date.month, start_date.day),
-                    row['slow_start_enabled'] == 1
-                )
+                row['id'],
+                row['name'],
+                date(start_date.year, start_date.month, start_date.day),
+                row['slow_start_enabled'] == 1,
+                row['session_id']
             )
             users.append(user)
 

@@ -23,8 +23,9 @@ class Token:
     PAGE_WAIT: int = 2
     RETRY: int = 5
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, session_id: str):
         self.name: str = name
+        self.session_id = session_id
         self.driver: Chrome = None
         self.status: TokenStatus = TokenStatus.NOT_LOG_IN
 

@@ -26,7 +26,7 @@ class ActiveRabbit:
 
         for user in users:
             password: str = user.getPassword()
-            ArTimelineFavoriter.do(user.userData.name, password)
+            ArTimelineFavoriter.do(user, password)
 
         Connection.close()
 
