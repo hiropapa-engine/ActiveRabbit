@@ -84,7 +84,7 @@ class ArFollowTask:
                 post.favorite(token)
             '''
             post.close(token)
-            '''
             # フォロー
+            '''
             user.follow(token)
             '''
