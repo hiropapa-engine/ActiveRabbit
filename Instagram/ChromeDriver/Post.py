@@ -12,13 +12,15 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-from Token import Token
-from Token import TokenStatus
+from typing import List
+import time
+
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 
-from typing import List
-from Favorites import Favorites
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
+from Instagram.ChromeDriver.Favorites import Favorites
 
 class Post:
 
@@ -109,7 +111,7 @@ class Post:
         return True
 
     def showFavorites(self, token: Token) -> Favorites:
-        FAVORITE_LIST_LINK_XPATH: str = '/html/body/div[3]/div[2]/div/article/div[2]/section[2]/div/div[2]/button/span'
+        FAVORITE_LIST_LINK_XPATH: str = '/html/body/div[3]/div[2]/div/article/div[2]/section[2]/div/div[*]/button/span'
         FAVORITE_LIST_DLG_XPATH: str = '/html/body/div[4]/div'
 
         if token.status != TokenStatus.POST:
@@ -123,6 +125,7 @@ class Post:
         if not favorites.is_displayed():
             raise Exception()
 
+        time.sleep(1)
         token.status = TokenStatus.FAVORITE_LIST
 
         return Favorites(self)

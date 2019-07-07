@@ -14,25 +14,29 @@ logger.propagate = False
 
 from typing import List
 
-from Connection import Connection
+from ArConnection import ArConnection
 from ArUserManager import ArUserManager
 from ArUser import ArUser
+from ArLogin import ArLogin
 from ArTimelineFavoriter import ArTimelineFavoriter
+from ArAutoFollow import ArAutoFollow
 
 class ActiveRabbit:
 
     @classmethod
     def do(cls):
-        Connection.open()
+        ArConnection.open()
 
         userManager: ArUserManager = ArUserManager()
         users: List[ArUser] = userManager.getUsers()
 
         for user in users:
             password: str = user.getPassword()
-            ArTimelineFavoriter.do(user, password)
+            ArLogin.do(user, password)
+            # ArTimelineFavoriter.do(user)
+            ArAutoFollow.do(user)
 
-        Connection.close()
+        ArConnection.close()
 
 if __name__ == '__main__':
     ActiveRabbit.do()

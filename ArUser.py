@@ -15,7 +15,7 @@ logger.propagate = False
 from datetime import date
 import datetime
 
-from Connection import Connection
+from ArConnection import ArConnection
 
 class ArUser:
     def __init__(self, id: int, name: str, start_date: date, slow_start_enabled: bool, session_id: str):
@@ -24,15 +24,16 @@ class ArUser:
         self.start_date: date = start_date
         self.slow_start_enabled = slow_start_enabled
         self.session_id = session_id
+        self.token = None
 
     def getPassword(self) -> str:
-        cur = Connection.cursor()
+        cur = ArConnection.cursor()
         query: str = "select * from users where id={0}".format(self.id)
         cur.execute(query)
         return cur.fetchone()['password']
 
     def saveSession(self):
-        cur = Connection.cursor()
+        cur = ArConnection.cursor()
         query: str = "update users set session_id='{0}' where name='{1}'".format(self.session_id, self.name)
         cur.execute(query)
         return

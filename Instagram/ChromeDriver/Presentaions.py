@@ -17,7 +17,7 @@ from typing import List
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 
-import Token
+from Instagram.ChromeDriver.Token import Token
 
 class Presentations:
     PRESENTATION_SEARCH_XPATH = "/html/body/div[*]"

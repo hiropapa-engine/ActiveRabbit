@@ -14,17 +14,15 @@ logger.propagate = False
 
 from Instagram.ChromeDriver.Token import Token
 from Instagram.ChromeDriver.Login import Login
-from Instagram.ChromeDriver.Timeline import Timeline
 
 from ArUser import ArUser
 
-class ArTimelineFavoriter:
-
+class ArLogin:
     @classmethod
-    def do(cls, user: ArUser):
-        # タイムラインの最新投稿を取得
-        timeline = Timeline()
-        recentPost = timeline.getRecentPost(user.token)
-        if recentPost != None:
-            if not timeline.isFavorited(user.token, recentPost):
-                timeline.favorite(user.token, recentPost)
+    def do(cls, user: ArUser, password: str):
+        # ログイン
+        token: Token = Token(user.name, user.session_id)
+        Login().doLogin(token, password)
+        user.token = token
+        user.session_id = token.session_id
+        user.saveSession()

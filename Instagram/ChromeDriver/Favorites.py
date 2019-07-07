@@ -17,10 +17,13 @@ import time
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
 
-from Token import Token
-from Token import TokenStatus
-from Presentaions import Presentations
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
+from Instagram.ChromeDriver.Presentaions import Presentations
+from Instagram.ChromeDriver.JavaScript import JavaScript
+from Instagram.ChromeDriver.OtherUser import OtherUser
 
 class Favorites:
 
@@ -29,9 +32,8 @@ class Favorites:
 
     def getUsers(self, token: Token) -> List[str]:
 
-        FAVORITES_RELATIVE_XPATH = "div/div[2]/div/div"
-        FAVORITE_TAG_NAME = "a"
-        USER_NAME_ATTR = 'title'
+        FAVORITES_RELATIVE_XPATH = "div/div[2]/div/div/div[*]"
+        PROFILE_LINK_RELATIVE_XPATH = "div[2]/div/div/a/div/div/div"
 
         if token.status != TokenStatus.FAVORITE_LIST:
             raise Exception()
@@ -42,24 +44,39 @@ class Favorites:
 
         # 追加する対象がいなくなるまでリストアップしてスクロール
         userSet = set()
-        driver : Chrome = token.driver
+
+        lastName = ""
         while True:
             # 表示要素からの相対パス div/div[2]/div/div の直下の div が良いねリスト
-            favoriteElem = presElem.find_element_by_xpath(FAVORITES_RELATIVE_XPATH)
-            favoriteList: List[WebElement] = favoriteElem.find_elements_by_tag_name(FAVORITE_TAG_NAME)
-
-            # リストアップ
-            append: int = 0
-            for favorite in favoriteList:
-                name = favorite.get_attribute(USER_NAME_ATTR)
-                if len(name) != 0 and not name in userSet:
-                    userSet.add(name)
-                    append = append + 1
-
-            if append == 0:
+            favoriteElems = presElem.find_elements_by_xpath(FAVORITES_RELATIVE_XPATH)
+            listLastName = favoriteElems[len(favoriteElems)-1].find_element_by_xpath(PROFILE_LINK_RELATIVE_XPATH).text
+            if lastName == listLastName:
                 break
-            else:
-                JavaScript.scrollIntoView(driver, favoriteList[len(favoriteList) - 1])
+
+            addCount = 0
+            for favoriteElem in favoriteElems:
+                nameElem: WebElement = favoriteElem.find_element_by_xpath(PROFILE_LINK_RELATIVE_XPATH)
+                name = nameElem.text
+
+                otherUser: OtherUser = OtherUser(name, False)
+                if len(name) != 0 and not name in map(lambda otherUser: otherUser.name, userSet):
+                    userSet.add(otherUser)
+                    addCount = addCount + 1
+                
+                lastName = name
+
+            JavaScript.scrollIntoView(token.driver, favoriteElems[len(favoriteElems)-1])
 
         logger.debug("favorite lists (size = {0})".format(len(userSet)))
         return list(userSet)
+
+    def close(self, token: Token):
+        if token.status != TokenStatus.FAVORITE_LIST:
+            raise Exception()
+
+        CLOSE_BUTTON_XPATH = "/html/body/div[4]/div/div[1]/div/div[2]/button"
+        driver: Chrome = token.driver
+        closeButtonElem = driver.find_element_by_xpath(CLOSE_BUTTON_XPATH)
+        closeButtonElem.click()
+        
+        token.status = TokenStatus.POST

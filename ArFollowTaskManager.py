@@ -12,19 +12,15 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-from Instagram.ChromeDriver.Token import Token
-from Instagram.ChromeDriver.Login import Login
-from Instagram.ChromeDriver.Timeline import Timeline
+from typing import List
 
 from ArUser import ArUser
+from ArFollowTask import ArFollowTask
 
-class ArTimelineFavoriter:
-
+class ArFollowTaskManager:
     @classmethod
-    def do(cls, user: ArUser):
-        # タイムラインの最新投稿を取得
-        timeline = Timeline()
-        recentPost = timeline.getRecentPost(user.token)
-        if recentPost != None:
-            if not timeline.isFavorited(user.token, recentPost):
-                timeline.favorite(user.token, recentPost)
+    def getFollowTasks(cls, user: ArUser) -> List[ArFollowTask]:
+        # TODO: データベースからのタスク一覧取得処理実装
+        followTasks: List[ArFollowTask] = []
+        followTasks.append(ArFollowTask(user, "fukupiero_", 15))
+        return followTasks

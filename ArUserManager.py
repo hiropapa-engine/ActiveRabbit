@@ -17,7 +17,7 @@ from datetime import date
 
 from mysql.connector.cursor import MySQLCursorDict
 
-from Connection import Connection
+from ArConnection import ArConnection
 from ArUser import ArUser
 
 class ArUserManager:
@@ -27,7 +27,7 @@ class ArUserManager:
 
     def getUsers(self) -> List[ArUser]:   # type: List[User]
         users : List[ArUser] = []
-        cur : MySQLCursorDict = Connection.cursor()
+        cur : MySQLCursorDict = ArConnection.cursor()
         cur.execute("select * from users where enabled=1;")
 
         for row in cur.fetchall():

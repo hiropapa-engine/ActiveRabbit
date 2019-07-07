@@ -16,7 +16,7 @@ from mysql import connector
 from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursorDict
 
-class Connection:
+class ArConnection:
     conn: MySQLConnection = None
 
     @classmethod

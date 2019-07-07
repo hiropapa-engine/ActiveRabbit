@@ -15,8 +15,8 @@ logger.propagate = False
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 
-from Token import Token
-from Token import TokenStatus
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
 
 class Following:
     CLOSE_BUTTON_XPATH = '/html/body/div[3]/div/div[1]/div/div[2]/button'

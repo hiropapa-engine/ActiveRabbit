@@ -21,11 +21,11 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from Token import Token
-from Token import TokenStatus
-from Post import Post
-from Favorites import Favorites
-from Following import Following
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
+from Instagram.ChromeDriver.Post import Post
+from Instagram.ChromeDriver.Favorites import Favorites
+from Instagram.ChromeDriver.Following import Following
 
 class User:
 
@@ -66,8 +66,6 @@ class User:
         mediaElem: WebElement = driver.find_element_by_xpath(MEDIA_SELECTOR_XPATH)
         mediaElem.click()
 
-        # ToDo : 投稿が表示されたかチェック
-
         token.status = TokenStatus.POST
         return Post(self)
 
@@ -92,13 +90,18 @@ class User:
         followingElem: WebElement = driver.find_element_by_xpath(User.FOLLOWING_LINKS_XPATH)
         followingElem.click()
 
-        # ToDo : フォロー中ダイアログが表示されたかチェック
-
         token.status = TokenStatus.FOLLOWING
 
         return Following(self)
 
-from ChromeDriver import ChromeDriver
+    def follow(self, token: Token):
+        FOLLOW_BUTTON_XPATH = '//*[@id="react-root"]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button'
+        driver: Chrome = token.driver
+        followButtonElem: WebElement = driver.find_element_by_xpath(FOLLOW_BUTTON_XPATH)
+        if followButtonElem.text == 'フォローする':
+            followButtonElem.click()
+
+from Instagram.ChromeDriver.ChromeDriver import ChromeDriver
 
 if __name__ == "__main__":
 
