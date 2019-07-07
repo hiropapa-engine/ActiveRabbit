@@ -30,7 +30,7 @@ class ChromeDriver:
     def getDriver(self, session_id: str = None):
         logger.debug("getDriver() : 開始(session_id = {0})".format(session_id))
         options = webdriver.ChromeOptions()
-        options.binary_location = '/usr/bin/google-chrome'
+        #options.binary_location = '/usr/bin/google-chrome'
         #options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')

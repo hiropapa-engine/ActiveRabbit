@@ -21,7 +21,6 @@ from selenium.webdriver.remote.webelement import WebElement
 from Token import Token
 from Token import TokenStatus
 from Presentaions import Presentations
-from JavaScript import JavaScript
 
 class Favorites:
 

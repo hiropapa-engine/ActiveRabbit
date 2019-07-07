@@ -14,9 +14,9 @@ logger.propagate = False
 
 from typing import List
 
-from Token import Token
-from Login import Login
-from Timeline import Timeline
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Login import Login
+from Instagram.ChromeDriver.Timeline import Timeline
 
 from ArUser import ArUser
 
