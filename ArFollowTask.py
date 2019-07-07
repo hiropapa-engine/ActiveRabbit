@@ -13,6 +13,7 @@ logger.addHandler(handler)
 logger.propagate = False
 
 from typing import List
+import datetime
 
 from ArUser import ArUser
 from Instagram.ChromeDriver.Token import Token
@@ -23,8 +24,9 @@ from Instagram.ChromeDriver.OtherUser import OtherUser
 
 class ArFollowTask:
 
-    def __init__(self, user: ArUser, target: str, followNum: int):
+    def __init__(self, user: ArUser, executeTiming: datetime, target: str, followNum: int):
         self.user = user
+        self.executeTiming = executeTiming
         self.target = target
         self.followNum = followNum
 
@@ -77,8 +79,12 @@ class ArFollowTask:
             user.show(token)
             # 最新投稿にいいね
             post = user.showRecentPost(token)
+            '''
             if not post.isFavorited(token):
                 post.favorite(token)
+            '''
             post.close(token)
+            '''
             # フォロー
             user.follow(token)
+            '''

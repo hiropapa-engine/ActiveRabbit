@@ -27,6 +27,7 @@ class ArAutoFollow:
         # フォロータスクを実行する
         for follow in followTasks:
             follow.do()
+            ArFollowTaskManager.deleteFollowTask(follow)
 
 if __name__ == '__main__':
     ArAutoFollow.do(None)

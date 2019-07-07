@@ -34,7 +34,7 @@ class Favorites:
 
         FAVORITES_RELATIVE_XPATH = "div/div[2]/div/div/div[*]"
         PROFILE_LINK_RELATIVE_XPATH = "div[2]/div/div/a/div/div/div"
-
+        FOLLOW_BUTTON_RELATIVE_XPATH = "div[3]/button"
         if token.status != TokenStatus.FAVORITE_LIST:
             raise Exception()
 
@@ -56,9 +56,12 @@ class Favorites:
             addCount = 0
             for favoriteElem in favoriteElems:
                 nameElem: WebElement = favoriteElem.find_element_by_xpath(PROFILE_LINK_RELATIVE_XPATH)
-                name = nameElem.text
+                name: str = nameElem.text
 
-                otherUser: OtherUser = OtherUser(name, False)
+                followButtonElem: WebElement = favoriteElem.find_element_by_xpath(FOLLOW_BUTTON_RELATIVE_XPATH)
+                followed: bool = followButtonElem.text != "フォローする"
+
+                otherUser: OtherUser = OtherUser(name, followed)
                 if len(name) != 0 and not name in map(lambda otherUser: otherUser.name, userSet):
                     userSet.add(otherUser)
                     addCount = addCount + 1
