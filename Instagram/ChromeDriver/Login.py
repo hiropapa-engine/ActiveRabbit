@@ -20,9 +20,9 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 
-from Token import Token
-from Token import TokenStatus
-from ChromeDriver import ChromeDriver
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
+from Instagram.ChromeDriver.ChromeDriver import ChromeDriver
 
 class Login:
 

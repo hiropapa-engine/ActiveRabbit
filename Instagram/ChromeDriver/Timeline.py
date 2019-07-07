@@ -16,10 +16,10 @@ from typing import List
 
 from selenium.webdriver.remote.webelement import WebElement
 
-from Token import Token
-from Token import TokenStatus
-from JavaScript import JavaScript
-from ChromeDriver import ChromeDriver
+from Instagram.ChromeDriver.Token import Token
+from Instagram.ChromeDriver.Token import TokenStatus
+from Instagram.ChromeDriver.JavaScript import JavaScript
+from Instagram.ChromeDriver.ChromeDriver import ChromeDriver
 
 class Timeline:
     POST_TAG_NAME = 'article'
