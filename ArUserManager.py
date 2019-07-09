@@ -22,10 +22,8 @@ from ArUser import ArUser
 
 class ArUserManager:
 
-    def __init__(self):
-        pass
-
-    def getUsers(self) -> List[ArUser]:   # type: List[User]
+    @classmethod
+    def getUsers(cls) -> List[ArUser]:   # type: List[User]
         users : List[ArUser] = []
         cur : MySQLCursorDict = ArConnection.cursor()
         cur.execute("select * from users where enabled=1;")
@@ -37,7 +35,6 @@ class ArUserManager:
                 row['id'],
                 row['name'],
                 date(start_date.year, start_date.month, start_date.day),
-                row['slow_start_enabled'] == 1,
                 row['session_id']
             )
             users.append(user)

@@ -18,11 +18,10 @@ import datetime
 from ArConnection import ArConnection
 
 class ArUser:
-    def __init__(self, id: int, name: str, start_date: date, slow_start_enabled: bool, session_id: str):
+    def __init__(self, id: int, name: str, start_date: date, session_id: str):
         self.id: int = id
         self.name: str = name
         self.start_date: date = start_date
-        self.slow_start_enabled = slow_start_enabled
         self.session_id = session_id
         self.token = None
 
