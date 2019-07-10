@@ -16,6 +16,8 @@ from typing import List
 import datetime
 
 from ArUser import ArUser
+from ArFollowHistory import ArFollowHistory
+
 from Instagram.ChromeDriver.Token import Token
 from Instagram.ChromeDriver.User import User
 from Instagram.ChromeDriver.Post import Post
@@ -79,12 +81,12 @@ class ArFollowTask:
             user.show(token)
             # 最新投稿にいいね
             post = user.showRecentPost(token)
-            '''
             if not post.isFavorited(token):
                 post.favorite(token)
-            '''
             post.close(token)
+
             # フォロー
-            '''
             user.follow(token)
-            '''
+
+            # フォローヒストリを記録する
+            ArFollowHistory.create(self.user, user.name, target.name)

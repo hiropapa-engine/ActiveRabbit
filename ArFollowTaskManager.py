@@ -42,6 +42,18 @@ class ArFollowTaskManager:
         return followTasks
 
     @classmethod
+    def insertFollowTask(cls, task: ArFollowTask):
+        cur: MySQLCursorDict= ArConnection.cursor()
+        query: str = "insert into following_tasks (owner_id, execute_timing, target, following_limit) values({owner_id}, '{execute_timing}', '{target}', {following_limit})"
+        query = query.format(
+            owner_id = task.user.id,
+            execute_timing = task.executeTiming.strftime("%Y/%m/%d %H:%M:%S"),
+            target = task.target,
+            following_limit = task.followNum
+        )
+        cur.execute(query)
+
+    @classmethod
     def deleteFollowTask(cls, task: ArFollowTask):
         cur: MySQLCursorDict= ArConnection.cursor()
         query: str = "delete from following_tasks where owner_id = {0} and execute_timing = '{1:%Y-%m-%d %H:%M:%S}'"

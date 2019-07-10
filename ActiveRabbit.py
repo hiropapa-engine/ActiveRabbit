@@ -27,8 +27,7 @@ class ActiveRabbit:
     def do(cls):
         ArConnection.open()
 
-        userManager: ArUserManager = ArUserManager()
-        users: List[ArUser] = userManager.getUsers()
+        users: List[ArUser] = ArUserManager.getUsers()
 
         for user in users:
             password: str = user.getPassword()
