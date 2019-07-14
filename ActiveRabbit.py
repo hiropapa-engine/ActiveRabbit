@@ -32,7 +32,7 @@ class ActiveRabbit:
         for user in users:
             password: str = user.getPassword()
             ArLogin.do(user, password)
-            # ArTimelineFavoriter.do(user)
+            ArTimelineFavoriter.do(user)
             ArAutoFollow.do(user)
 
         ArConnection.close()
